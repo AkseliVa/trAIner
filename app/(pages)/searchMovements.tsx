@@ -9,8 +9,8 @@ export default function SearchMovementsPage() {
 
     const [name, setName] = useState("");
 
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
+    const [openBodypart, setOpenBodypart] = useState(false);
+    const [bodypartValue, setBodypartValue] = useState(null);
     const [bodypart, setBodypart] = useState([
         { label: "Back", value: "back" },
         { label: "Cardio", value: "cardio" },
@@ -23,7 +23,40 @@ export default function SearchMovementsPage() {
         { label: "Upper Legs", value: "upper legs" },
         { label: "Waist", value: "waist" },
     ]);
-    const [equipment, setEquipment] = useState("");
+
+    const [openEquipment, setOpenEquipment] = useState(false);
+    const [equipmentValue, setEquipmentValue] = useState(null);
+    const [equipment, setEquipment] = useState([
+        { label: "Assisted", value: "assisted" },
+        { label: "Band", value: "band" },
+        { label: "Barbell", value: "barbell" },
+        { label: "Body Weight", value: "body weight" },
+        { label: "Bosu Ball", value: "bosu ball" },
+        { label: "Cable", value: "cable" },
+        { label: "Dumbbell", value: "dumbbell" },
+        { label: "Elliptical Machine", value: "elliptical machine" },
+        { label: "Ez Barbell", value: "ez barbell" },
+        { label: "Hammer", value: "hammer" },
+        { label: "Kettlebell", value: "kettlebell" },
+        { label: "Leverage Machine", value: "leverage machine" },
+        { label: "Medicine Ball", value: "medicine ball" },
+        { label: "Olympic Barbell", value: "olympic barbell" },
+        { label: "Resistance Band", value: "resistance band" },
+        { label: "Roller", value: "roller" },
+        { label: "Rope", value: "rope" },
+        { label: "Skierg Machine", value: "skierg machine" },
+        { label: "Sled Machine", value: "sled machine" },
+        { label: "Smith Machine", value: "smith machine" },
+        { label: "Stability Ball", value: "stability ball" },
+        { label: "Stationary Bike", value: "stationary bike" },
+        { label: "Stepmill Machine", value: "stepmill machine" },
+        { label: "Tire", value: "tire" },
+        { label: "Trap Bar", value: "trap bar" },
+        { label: "Upper Body Ergometer", value: "upper body ergometer" },
+        { label: "Weighted", value: "weighted" },
+        { label: "Wheel Roller", value: "wheel roller" }
+      ]
+      );
 
     /* useEffect(() => {
         async function fetchMovements() {
@@ -75,19 +108,35 @@ export default function SearchMovementsPage() {
                             width: 140,
                             margin: 5,
                         }}
-                        open={open}
-                        value={value}
+                        open={openBodypart}
+                        value={bodypartValue}
                         items={bodypart}
-                        setOpen={setOpen}
-                        setValue={setValue}
+                        setOpen={setOpenBodypart}
+                        setValue={setBodypartValue}
                         setItems={setBodypart}
+                        placeholder="Select bodypart"
+                        zIndex={3000}
+                        zIndexInverse={1000}
                     />
-                    <TextInput
-                        className="border-2 border-solid border-black rounded-md m-5 p-3 bg-white text-black w-40"
-                        placeholder="Equipment"
-                        placeholderTextColor="black"
-                        value={equipment}
-                        onChangeText={setEquipment}
+                    <DropDownPicker
+                        style={{
+                            backgroundColor: "white",
+                            borderColor: "black",
+                            borderWidth: 2,
+                        }}
+                        containerStyle={{
+                            width: 140,
+                            margin: 5,
+                        }}
+                        open={openEquipment}
+                        value={equipmentValue}
+                        items={equipment}
+                        setOpen={setOpenEquipment}
+                        setValue={setEquipmentValue}
+                        setItems={setEquipment}
+                        placeholder="Select equipment"
+                        zIndex={2000}
+                        zIndexInverse={2000}
                     />
                     <TouchableOpacity
                         className="border-2 border-solid border-black rounded-md m-5 p-3 bg-white text-black w-40 items-center"
