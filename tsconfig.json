@@ -14,5 +14,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-  ]
+, "app/(pages)/newWorkout.jsx", "app/(pages)/savedWorkouts.jsx", "app/(pages)/searchMovements.jsx"  ]
 }

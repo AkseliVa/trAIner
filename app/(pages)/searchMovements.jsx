@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, Pressable, Modal } from "react-native";
 import { useState, useEffect } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -8,6 +8,8 @@ import EquipmentItem from "../states/equipments";
 
 import { fetchMovements } from "../utils/fetchMovements";
 
+import MovementModal from "../components/movementModal";
+
 export default function SearchMovementsPage() {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
     const apiKey = process.env.EXPO_PUBLIC_API_KEY;
@@ -15,7 +17,7 @@ export default function SearchMovementsPage() {
         id: "",
         name: "",
         target: "",
-        bodypart: "",
+        bodyPart: "",
         equipment: "",
         gifUrl: "",
         instructions: ""
@@ -30,14 +32,25 @@ export default function SearchMovementsPage() {
     const [openEquipment, setOpenEquipment] = useState(false);
     const [equipmentValue, setEquipmentValue] = useState(null);
     const [equipmentItems, setEquipmentItems] = EquipmentItem();
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedMovement, setSelectedMovement] = useState(null);
     
     const renderItem = ({item}) => {
-
         return (
-        <View className="justify-center items-center">
-            <Text className="text-white font-bold text-md">{item.name}</Text>
-            <Image style={{width:250, height: 200}}
-                source={{uri: item.gifUrl}} />
+            <View className="justify-center items-center">
+                <Pressable
+                    className="justify-center items-center"
+                    onPress={() => {
+                        setSelectedMovement(item)
+                        setModalVisible(true)
+                    }
+                    }
+                >
+                    <Text className="text-white font-bold text-md">{item.name}</Text>
+                    <Image style={{width:250, height: 200}}
+                        source={{ uri: item.gifUrl }} />
+                </Pressable>
         </View>
         )
     }  
@@ -48,6 +61,22 @@ export default function SearchMovementsPage() {
                 style={{ flex: 1 }}
                 colors={["rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.8)"]}
             >
+                <Modal
+                    visible={modalVisible}
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() => setModalVisible(false)} // Close modal on back button (Android)
+                >
+                    <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+                        {selectedMovement && (
+                            <MovementModal
+                                {...selectedMovement} // Pass the movement details as props
+                                onClose={() => setModalVisible(false)} // Close modal callback
+                            />
+                        )}
+                    </View>
+                </Modal>
+
                 <Text className="text-black text-center text-5xl font-bold pt-10">Search Movements page</Text>
                 <View className="items-center content-center w-90 border-2 border-solid border-black rounded-md">
                     <TextInput
