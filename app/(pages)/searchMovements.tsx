@@ -1,87 +1,46 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from "react-native";
 import { useState, useEffect } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import DropDownPicker from 'react-native-dropdown-picker';
 
+import BodypartItem from "../states/bodyparts";
+import EquipmentItem from "../states/equipments";
+
+import { fetchMovements } from "../utils/fetchMovements";
+
 export default function SearchMovementsPage() {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
     const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+    const [movementData, setMovementData] = useState([{
+        id: "",
+        name: "",
+        target: "",
+        bodypart: "",
+        equipment: "",
+        gifUrl: "",
+        instructions: ""
+    }])
 
     const [name, setName] = useState("");
 
     const [openBodypart, setOpenBodypart] = useState(false);
     const [bodypartValue, setBodypartValue] = useState(null);
-    const [bodypart, setBodypart] = useState([
-        { label: "Back", value: "back" },
-        { label: "Cardio", value: "cardio" },
-        { label: "Chest", value: "chest" },
-        { label: "Lower Arms", value: "lower arms" },
-        { label: "Lower Legs", value: "lower legs" },
-        { label: "Neck", value: "neck" },
-        { label: "Shoulders", value: "shoulders" },
-        { label: "Upper arms", value: "upper arms" },
-        { label: "Upper Legs", value: "upper legs" },
-        { label: "Waist", value: "waist" },
-    ]);
+    const [bodypartItems, setBodypartItems] = BodypartItem();
 
     const [openEquipment, setOpenEquipment] = useState(false);
     const [equipmentValue, setEquipmentValue] = useState(null);
-    const [equipment, setEquipment] = useState([
-        { label: "Assisted", value: "assisted" },
-        { label: "Band", value: "band" },
-        { label: "Barbell", value: "barbell" },
-        { label: "Body Weight", value: "body weight" },
-        { label: "Bosu Ball", value: "bosu ball" },
-        { label: "Cable", value: "cable" },
-        { label: "Dumbbell", value: "dumbbell" },
-        { label: "Elliptical Machine", value: "elliptical machine" },
-        { label: "Ez Barbell", value: "ez barbell" },
-        { label: "Hammer", value: "hammer" },
-        { label: "Kettlebell", value: "kettlebell" },
-        { label: "Leverage Machine", value: "leverage machine" },
-        { label: "Medicine Ball", value: "medicine ball" },
-        { label: "Olympic Barbell", value: "olympic barbell" },
-        { label: "Resistance Band", value: "resistance band" },
-        { label: "Roller", value: "roller" },
-        { label: "Rope", value: "rope" },
-        { label: "Skierg Machine", value: "skierg machine" },
-        { label: "Sled Machine", value: "sled machine" },
-        { label: "Smith Machine", value: "smith machine" },
-        { label: "Stability Ball", value: "stability ball" },
-        { label: "Stationary Bike", value: "stationary bike" },
-        { label: "Stepmill Machine", value: "stepmill machine" },
-        { label: "Tire", value: "tire" },
-        { label: "Trap Bar", value: "trap bar" },
-        { label: "Upper Body Ergometer", value: "upper body ergometer" },
-        { label: "Weighted", value: "weighted" },
-        { label: "Wheel Roller", value: "wheel roller" }
-      ]
-      );
-
-    /* useEffect(() => {
-        async function fetchMovements() {
-            const url = "https://exercisedb.p.rapidapi.com/exercises?limit=10&offset=0";
-            const options = {
-                method: 'GET',
-                headers: {
-                    'x-rapidapi-key': apiKey,
-                    'x-rapidapi-host': apiUrl
-                }
-            };
-
-            try {
-                const response = await fetch(url, options);
-                const result = await response.text();
-                console.log(result);
-            } catch (error) {
-                console.error("Error fetching: ", error);
-            }
-        }
-        fetchMovements();
-    }, []
-) */
-
+    const [equipmentItems, setEquipmentItems] = EquipmentItem();
     
+    const renderItem = ({item}) => {
+
+        return (
+        <View className="justify-center items-center">
+            <Text className="text-white font-bold text-md">{item.name}</Text>
+            <Image style={{width:250, height: 200}}
+                source={{uri: item.gifUrl}} />
+        </View>
+        )
+    }  
     
     return (
         <View className="flex-1">
@@ -110,10 +69,10 @@ export default function SearchMovementsPage() {
                         }}
                         open={openBodypart}
                         value={bodypartValue}
-                        items={bodypart}
+                        items={bodypartItems}
                         setOpen={setOpenBodypart}
                         setValue={setBodypartValue}
-                        setItems={setBodypart}
+                        setItems={setBodypartItems}
                         placeholder="Select bodypart"
                         zIndex={3000}
                         zIndexInverse={1000}
@@ -130,19 +89,27 @@ export default function SearchMovementsPage() {
                         }}
                         open={openEquipment}
                         value={equipmentValue}
-                        items={equipment}
+                        items={equipmentItems}
                         setOpen={setOpenEquipment}
                         setValue={setEquipmentValue}
-                        setItems={setEquipment}
+                        setItems={setEquipmentItems}
                         placeholder="Select equipment"
                         zIndex={2000}
                         zIndexInverse={2000}
                     />
                     <TouchableOpacity
                         className="border-2 border-solid border-black rounded-md m-5 p-3 bg-white text-black w-40 items-center"
+                        onPress={() => fetchMovements(apiUrl, apiKey, setMovementData)}
                     >
                         <Text className="text-lg font-bold">Search</Text>
                     </TouchableOpacity>
+                </View>
+                <View className="justify-center items-center">
+                    <FlatList
+                        data={movementData}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                    />
                 </View>
             </LinearGradient>
         </View>
