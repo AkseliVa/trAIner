@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const BodypartItem = () => {
     const [bodypartItems, setBodypartItems] = useState([
+        { label: "None", value: ""},
         { label: "Back", value: "back" },
         { label: "Cardio", value: "cardio" },
         { label: "Chest", value: "chest" },

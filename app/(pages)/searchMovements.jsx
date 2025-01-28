@@ -79,56 +79,66 @@ export default function SearchMovementsPage() {
 
                 <Text className="text-black text-center text-5xl font-bold pt-10">Search Movements page</Text>
                 <View className="items-center content-center w-90 border-2 border-solid border-black rounded-md">
-                    <TextInput
-                        className="border-2 border-solid border-black rounded-md m-5 p-3 bg-white text-black w-40"
-                        placeholder="Name"
-                        placeholderTextColor="black"
-                        value={name}
-                        onChangeText={setName}
-                    />
-                    <DropDownPicker
-                        style={{
-                            backgroundColor: "white",
-                            borderColor: "black",
-                            borderWidth: 2,
-                        }}
-                        containerStyle={{
-                            width: 140,
-                            margin: 5,
-                        }}
-                        open={openBodypart}
-                        value={bodypartValue}
-                        items={bodypartItems}
-                        setOpen={setOpenBodypart}
-                        setValue={setBodypartValue}
-                        setItems={setBodypartItems}
-                        placeholder="Select bodypart"
-                        zIndex={3000}
-                        zIndexInverse={1000}
-                    />
-                    <DropDownPicker
-                        style={{
-                            backgroundColor: "white",
-                            borderColor: "black",
-                            borderWidth: 2,
-                        }}
-                        containerStyle={{
-                            width: 140,
-                            margin: 5,
-                        }}
-                        open={openEquipment}
-                        value={equipmentValue}
-                        items={equipmentItems}
-                        setOpen={setOpenEquipment}
-                        setValue={setEquipmentValue}
-                        setItems={setEquipmentItems}
-                        placeholder="Select equipment"
-                        zIndex={2000}
-                        zIndexInverse={2000}
-                    />
+                    {!bodypartValue && !equipmentValue && (
+                        <TextInput
+                            className="border-2 border-solid border-black rounded-md mt-5 mb-2 p-3 bg-white text-black w-40"
+                            placeholder="Name"
+                            placeholderTextColor="black"
+                            value={name}
+                            onChangeText={setName}
+                        />
+                    )}
+                    {!name && !equipmentValue && (
+                        <DropDownPicker
+                            style={{
+                                backgroundColor: "white",
+                                borderColor: "black",
+                                borderWidth: 2,
+                            }}
+                            containerStyle={{
+                                width: 140,
+                                margin: 5,
+                            }}
+                            open={openBodypart}
+                            value={bodypartValue}
+                            items={bodypartItems}
+                            setOpen={setOpenBodypart}
+                            setValue={setBodypartValue}
+                            setItems={setBodypartItems}
+                            placeholder="Select bodypart"
+                            zIndex={3000}
+                            zIndexInverse={1000}
+                        />
+                    )}
+                    {!name && (bodypartValue === "" || !bodypartValue) && (
+                        <DropDownPicker
+                            style={{
+                                backgroundColor: "white",
+                                borderColor: "black",
+                                borderWidth: 2,
+                            }}
+                            containerStyle={{
+                                width: 140,
+                                margin: 5,
+                            }}
+                            open={openEquipment}
+                            value={equipmentValue}
+                            items={equipmentItems}
+                            setOpen={setOpenEquipment}
+                            setValue={setEquipmentValue}
+                            setItems={setEquipmentItems}
+                            placeholder="Select equipment"
+                            zIndex={2000}
+                            zIndexInverse={2000}
+                        />
+                    )
+                    }
                     <TouchableOpacity
                         className="border-2 border-solid border-black rounded-md m-5 p-3 bg-white text-black w-40 items-center"
-                        onPress={() => fetchMovements(apiUrl, apiKey, setMovementData)}
+                        onPress={() => {
+                            fetchMovements(apiUrl, apiKey, setMovementData, name, bodypartValue, equipmentValue)
+                            console.log(`name: ${name}, bodypartvalue: ${bodypartValue}, equipmentvalue: ${equipmentValue}`)
+                        }}
                     >
                         <Text className="text-lg font-bold">Search</Text>
                     </TouchableOpacity>

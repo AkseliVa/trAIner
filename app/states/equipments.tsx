@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const EquipmentItem = () => {
     const [equipmentItems, setEquipmentItems] = useState([
+        { label: "None", value: ""},
         { label: "Assisted", value: "assisted" },
         { label: "Band", value: "band" },
         { label: "Barbell", value: "barbell" },
