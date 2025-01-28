@@ -1,5 +1,7 @@
-// fetchMovements.js
-export const fetchMovements = async (apiUrl, apiKey, setMovementData, name, bodypartValue, equipmentValue) => {
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+
+export const fetchMovements = async (setMovementData, name, bodypartValue, equipmentValue) => {
     const nameParam = name ? `/name/${name.toLowerCase()}` : "";
     const bodyPartParam = bodypartValue ? `/bodyPart/${bodypartValue.toLowerCase()}` : "";
     const equipmentParam = equipmentValue ? `/equipment/${equipmentValue.toLowerCase()}` : "";

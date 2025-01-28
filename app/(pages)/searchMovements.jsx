@@ -1,7 +1,9 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image, Pressable, Modal } from "react-native";
-import { useState, useEffect } from "react"
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, Pressable, Modal, ImageBackground } from "react-native";
+import { useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
-import DropDownPicker from 'react-native-dropdown-picker';
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import kettlebell from "@/assets/images/kettlebell.jpg";
 
 import BodypartItem from "../states/bodyparts";
 import EquipmentItem from "../states/equipments";
@@ -9,10 +11,9 @@ import EquipmentItem from "../states/equipments";
 import { fetchMovements } from "../utils/fetchMovements";
 
 import MovementModal from "../components/movementModal";
+import CustomDropDownPicker from "../components/customDropDownPicker";
 
 export default function SearchMovementsPage() {
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-    const apiKey = process.env.EXPO_PUBLIC_API_KEY;
     const [movementData, setMovementData] = useState([{
         id: "",
         name: "",
@@ -57,28 +58,34 @@ export default function SearchMovementsPage() {
     
     return (
         <View className="flex-1">
+            <ImageBackground
+                source={kettlebell}
+                resizeMode="cover"
+                className="flex-1"
+            >
             <LinearGradient
                 style={{ flex: 1 }}
                 colors={["rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.8)"]}
             >
+            <SafeAreaView>
                 <Modal
                     visible={modalVisible}
                     animationType="slide"
                     transparent={true}
-                    onRequestClose={() => setModalVisible(false)} // Close modal on back button (Android)
+                    onRequestClose={() => setModalVisible(false)}
                 >
                     <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
                         {selectedMovement && (
                             <MovementModal
-                                {...selectedMovement} // Pass the movement details as props
-                                onClose={() => setModalVisible(false)} // Close modal callback
+                                {...selectedMovement}
+                                onClose={() => setModalVisible(false)}
                             />
                         )}
                     </View>
                 </Modal>
 
-                <Text className="text-black text-center text-5xl font-bold pt-10">Search Movements page</Text>
-                <View className="items-center content-center w-90 border-2 border-solid border-black rounded-md">
+                <Text className="text-white text-center text-5xl font-bold pt-8">Search Movements</Text>
+                <View className="items-center content-center w-90">
                     {!bodypartValue && !equipmentValue && (
                         <TextInput
                             className="border-2 border-solid border-black rounded-md mt-5 mb-2 p-3 bg-white text-black w-40"
@@ -89,16 +96,7 @@ export default function SearchMovementsPage() {
                         />
                     )}
                     {!name && !equipmentValue && (
-                        <DropDownPicker
-                            style={{
-                                backgroundColor: "white",
-                                borderColor: "black",
-                                borderWidth: 2,
-                            }}
-                            containerStyle={{
-                                width: 140,
-                                margin: 5,
-                            }}
+                        <CustomDropDownPicker 
                             open={openBodypart}
                             value={bodypartValue}
                             items={bodypartItems}
@@ -111,16 +109,7 @@ export default function SearchMovementsPage() {
                         />
                     )}
                     {!name && (bodypartValue === "" || !bodypartValue) && (
-                        <DropDownPicker
-                            style={{
-                                backgroundColor: "white",
-                                borderColor: "black",
-                                borderWidth: 2,
-                            }}
-                            containerStyle={{
-                                width: 140,
-                                margin: 5,
-                            }}
+                        <CustomDropDownPicker 
                             open={openEquipment}
                             value={equipmentValue}
                             items={equipmentItems}
@@ -136,7 +125,7 @@ export default function SearchMovementsPage() {
                     <TouchableOpacity
                         className="border-2 border-solid border-black rounded-md m-5 p-3 bg-white text-black w-40 items-center"
                         onPress={() => {
-                            fetchMovements(apiUrl, apiKey, setMovementData, name, bodypartValue, equipmentValue)
+                            fetchMovements(setMovementData, name, bodypartValue, equipmentValue)
                             console.log(`name: ${name}, bodypartvalue: ${bodypartValue}, equipmentvalue: ${equipmentValue}`)
                         }}
                     >
@@ -150,7 +139,9 @@ export default function SearchMovementsPage() {
                         keyExtractor={item => item.id}
                     />
                 </View>
+            </SafeAreaView>
             </LinearGradient>
+            </ImageBackground>
         </View>
     )
 };
