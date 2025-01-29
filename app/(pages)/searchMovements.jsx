@@ -1,60 +1,29 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image, Pressable, Modal, ImageBackground } from "react-native";
-import { useState } from "react"
+import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ImageBackground } from "react-native";
 import { LinearGradient } from "expo-linear-gradient"
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import kettlebell from "@/assets/images/kettlebell.jpg";
 
-import BodypartItem from "../states/bodyparts";
-import EquipmentItem from "../states/equipments";
-
 import { fetchMovements } from "../utils/fetchMovements";
+import useMovements from "../utils/useMovements";
 
 import MovementModal from "../components/movementModal";
 import CustomDropDownPicker from "../components/customDropDownPicker";
+import RenderSearchPageItem from "../components/renderSearchPageItem";
 
 export default function SearchMovementsPage() {
-    const [movementData, setMovementData] = useState([{
-        id: "",
-        name: "",
-        target: "",
-        bodyPart: "",
-        equipment: "",
-        gifUrl: "",
-        instructions: ""
-    }])
-
-    const [name, setName] = useState("");
-
-    const [openBodypart, setOpenBodypart] = useState(false);
-    const [bodypartValue, setBodypartValue] = useState(null);
-    const [bodypartItems, setBodypartItems] = BodypartItem();
-
-    const [openEquipment, setOpenEquipment] = useState(false);
-    const [equipmentValue, setEquipmentValue] = useState(null);
-    const [equipmentItems, setEquipmentItems] = EquipmentItem();
-
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedMovement, setSelectedMovement] = useState(null);
-    
-    const renderItem = ({item}) => {
-        return (
-            <View className="justify-center items-center">
-                <Pressable
-                    className="justify-center items-center"
-                    onPress={() => {
-                        setSelectedMovement(item)
-                        setModalVisible(true)
-                    }
-                    }
-                >
-                    <Text className="text-white font-bold text-md">{item.name}</Text>
-                    <Image style={{width:250, height: 200}}
-                        source={{ uri: item.gifUrl }} />
-                </Pressable>
-        </View>
-        )
-    }  
+    const {
+        movementData, setMovementData,
+        name, setName,
+        openBodypart, setOpenBodypart,
+        bodypartValue, setBodypartValue,
+        bodypartItems, setBodypartItems,
+        openEquipment, setOpenEquipment,
+        equipmentValue, setEquipmentValue,
+        equipmentItems, setEquipmentItems,
+        modalVisible, setModalVisible,
+        selectedMovement, setSelectedMovement
+    } = useMovements();
     
     return (
         <View className="flex-1">
@@ -84,7 +53,7 @@ export default function SearchMovementsPage() {
                     </View>
                 </Modal>
 
-                <Text className="text-white text-center text-5xl font-bold pt-8">Search Movements</Text>
+                <Text className="text-white text-center text-5xl font-bold">Search Movements</Text>
                 <View className="items-center content-center w-90">
                     {!bodypartValue && !equipmentValue && (
                         <TextInput
@@ -135,7 +104,13 @@ export default function SearchMovementsPage() {
                 <View className="justify-center items-center">
                     <FlatList
                         data={movementData}
-                        renderItem={renderItem}
+                        renderItem={({ item }) => (
+                            <RenderSearchPageItem 
+                                item={item} 
+                                setSelectedMovement={setSelectedMovement} 
+                                setModalVisible={setModalVisible} 
+                            />
+                        )}
                         keyExtractor={item => item.id}
                     />
                 </View>
